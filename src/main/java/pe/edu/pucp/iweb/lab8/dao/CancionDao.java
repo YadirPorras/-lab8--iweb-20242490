@@ -99,8 +99,20 @@ public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
     /**
      * Ejercicio 2: UPDATE de una canción existente (PreparedStatement).
      */
-    public void actualizar(Cancion cancion) {
+    public void actualizar(int idCancion, String titulo, String artista, String ciudad, int idLandingStation) {
         // TODO
+        String sql = "UPDATE cancion SET titulo = ?, artista = ?, duracionSeg = ?, anio = ?, genero = ? WHERE idcancion = ?";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, titulo);
+            pstmt.setString(2, artista);
+            pstmt.setString(3, ciudad);
+            pstmt.setInt(4, idLandingStation);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

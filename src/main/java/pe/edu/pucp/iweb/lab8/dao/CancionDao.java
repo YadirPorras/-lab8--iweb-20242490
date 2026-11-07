@@ -1,8 +1,11 @@
 package pe.edu.pucp.iweb.lab8.dao;
 
 import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
 import pe.edu.pucp.iweb.lab8.beans.Cancion;
+import pe.edu.pucp.iweb.lab8.beans.Genero;
 
 public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
 
@@ -12,14 +15,39 @@ public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
      */
     public ArrayList<Cancion> listar() {
         // TODO
-        return new ArrayList<>();
+        ArrayList<Cancion> lista = new ArrayList<>();
+        String sql = "SELECT * FROM cancion JOIN genero ON cancion.idGenero = genero.idGenero ORDER BY titulo";
+        try (Connection conn = this.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery(sql)){
+
+            while (rs.next()) {
+                Cancion ls = new Cancion();
+                ls.setIdCancion(rs.getInt("idcancion"));
+                ls.setTitulo(rs.getString("titulo"));
+                ls.setArtista(rs.getString("artista"));
+                ls.setDuracionSeg(rs.getInt("duracionSeg"));
+                ls.setAnio(rs.getInt("anio"));
+
+                Genero genero = new Genero();
+                genero.setIdGenero(rs.getInt("genero.idgenero"));
+                genero.setNombre(rs.getString("nombre"));
+                ls.setGenero(genero);
+
+                lista.add(ls);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 
     /**
      * Ejercicio 2: la canción con ese id, o null si no existe.
      */
     public Cancion buscarPorId(int idCancion) {
-        // TODO
+
         return null;
     }
 

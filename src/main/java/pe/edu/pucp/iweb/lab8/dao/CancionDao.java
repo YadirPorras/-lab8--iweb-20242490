@@ -47,8 +47,33 @@ public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
      * Ejercicio 2: la canción con ese id, o null si no existe.
      */
     public Cancion buscarPorId(int idCancion) {
+        Cancion cancion = null;
+        String sql = "SELECT * FROM cancion WHERE idcancion = ?";
 
-        return null;
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+             pstmt.setInt(1, idCancion);
+             try (ResultSet rs = pstmt.executeQuery()){
+                 if (rs.next()) {
+                     cancion = new Cancion();
+                     cancion.setIdCancion(rs.getInt("idcancion"));
+                     cancion.setTitulo(rs.getString("titulo"));
+                     cancion.setArtista(rs.getString("artista"));
+                     cancion.setDuracionSeg(rs.getInt("duracionSeg"));
+                     cancion.setAnio(rs.getInt("anio"));
+
+                     Genero genero = new Genero();
+                     genero.setIdGenero(rs.getInt("genero.idgenero"));
+                     genero.setNombre(rs.getString("nombre"));
+                     cancion.setGenero(genero);
+
+                 }
+             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cancion;
     }
 
     /**
@@ -56,6 +81,19 @@ public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
      */
     public void crear(Cancion cancion) {
         // TODO
+        String sql = "INSERT INTO cancion (titulo, artista, duracionSeg, anio, idGenero) VALUES (?, ?, ?, ?, ?)";
+        try (Connection conn = this.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, cancion.getTitulo());
+            pstmt.setString(2, cancion.getArtista());
+            pstmt.setInt(3, cancion.getDuracionSeg());
+            pstmt.setInt(4, cancion.getAnio());
+            pstmt.setInt(5, cancion.getGenero().getIdGenero());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -63,6 +101,7 @@ public class CancionDao extends BaseDao{ // TODO: heredar de BaseDao
      */
     public void actualizar(Cancion cancion) {
         // TODO
+
     }
 
     /**

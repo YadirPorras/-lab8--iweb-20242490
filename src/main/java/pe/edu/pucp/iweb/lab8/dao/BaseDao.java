@@ -13,7 +13,7 @@ import java.sql.*;
  */
 public abstract class BaseDao { // TODO: convertir en clase abstracta
 
-    private static final String URL = "jdbc:mysql://localhost:3306/melodiape";
+    private static final String URL = "jdbc:mysql://localhost:3306/melodiape?serverTimezone=America/Lima";
     private static final String USER = "root";
     private static final String PASS = "12345678"; // cambiar por la contraseña de su MySQL
 
